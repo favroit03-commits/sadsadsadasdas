@@ -9,7 +9,8 @@ RUN apk add --no-cache curl bash ca-certificates \
 EXPOSE 8080 3000
 
 RUN echo '#!/bin/bash' > /entrypoint.sh \
-    && echo 'chisel server --port 8080 --reverse &' >> /entrypoint.sh \
+    && echo 'PORT="${PORT:-8080}"' >> /entrypoint.sh \
+    && echo 'chisel server --port "$PORT" --reverse &' >> /entrypoint.sh \
     && echo 'if [ -n "$CLOUDFLARE_TOKEN" ]; then' >> /entrypoint.sh \
     && echo ' cloudflared tunnel --no-autoupdate run --token "$CLOUDFLARE_TOKEN"' >> /entrypoint.sh \
     && echo 'else' >> /entrypoint.sh \
